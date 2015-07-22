@@ -1,4 +1,4 @@
-
+    
 
 SWITCH_HOLE_SIZE = 13.97;
 
@@ -43,7 +43,7 @@ module fix_hole(position) {
 // fix_hole([0,0,0]);
 
 
-module switch_plank_outer(position, n_rows=N_ROWS) {
+module switch_plank_outer(position) {
     PLANK_UPPER_SPACE = SINGLE;
     PLANK_LOWER_SPACE = SINGLE;
 
@@ -60,9 +60,6 @@ module switch_plank_outer(position, n_rows=N_ROWS) {
         }
     }
 }
-
-
-// switch_plank_outer([0,0,0]);
 
 
 module switch_plank_simple(position, n_rows=N_ROWS) {
@@ -85,4 +82,29 @@ module switch_plank_simple(position, n_rows=N_ROWS) {
 }
 
 
-switch_plank_simple([0,0,0]);
+// switch_plank_simple([0,0,0]);
+
+
+module switch_plank_long_bottom(position) {
+    PLANK_UPPER_SPACE = SINGLE;
+    PLANK_LOWER_SPACE = SINGLE;
+
+    translate(position) {
+        difference() {
+            square([SINGLE, PLANK_LOWER_SPACE + QUARTER + 3 * SINGLE + PLANK_UPPER_SPACE]);
+            translate([0, PLANK_LOWER_SPACE, 0]) {
+                switch_hole([0, (QUARTER - SINGLE) / 2]);
+                switch_hole([0, QUARTER]);
+                switch_hole([0, QUARTER + SINGLE]);
+                switch_hole([0, QUARTER + 2 * SINGLE]);
+            }
+            fix_hole([SINGLE / 2, PLANK_LOWER_SPACE / 2, 0]);
+            fix_hole([SINGLE / 2, PLANK_LOWER_SPACE + QUARTER + 3 * SINGLE + PLANK_UPPER_SPACE / 2, 0]);
+        }
+    }
+}
+
+
+// switch_plank_outer([0,0,0]);
+//switch_plank_long_bottom([0,0]);
+switch_hole([0,0,0]);
