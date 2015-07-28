@@ -84,5 +84,17 @@ module keyboard_half(position) {
     ]);
 }
 
+// keyboard_half([0, 0, 0]);
 
-keyboard_half([0, 0, 0]);
+
+module thumb_cluster_horizontal(position) {
+    translate(position) {
+        switch_hole([0 * SINGLE, SINGLE + (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+        switch_hole([1 * SINGLE, SINGLE + (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+        switch_hole([2 * SINGLE, SINGLE + (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+        switch_hole([3 * SINGLE, 0, 0]);
+        switch_hole([3 * SINGLE, SINGLE, 0]);
+    }
+}
+
+thumb_cluster_horizontal([0,0,0]);
