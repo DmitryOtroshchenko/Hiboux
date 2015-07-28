@@ -63,17 +63,19 @@ module switch_plank_inner(position) {
 module keyboard_half(position) {
     COLUMN_OFFSETS = [0, 0, 7, 13, 10, 10, 10];
 
-    switch_plank_outer([0, COLUMN_OFFSETS[0], 0], false);
-    for (n_row = [0:4]) {
-        switch_plank_simple([
-            SINGLE_AND_HALF + n_row * SINGLE,
-            COLUMN_OFFSETS[n_row + 1], 0
+    translate(position) {
+        switch_plank_outer([0, COLUMN_OFFSETS[0], 0], false);
+        for (n_row = [0:4]) {
+            switch_plank_simple([
+                SINGLE_AND_HALF + n_row * SINGLE,
+                COLUMN_OFFSETS[n_row + 1], 0
+            ]);
+        }
+        switch_plank_inner([
+            SINGLE_AND_HALF + 5 * SINGLE,
+            COLUMN_OFFSETS[6], 0
         ]);
     }
-    switch_plank_inner([
-        SINGLE_AND_HALF + 5 * SINGLE,
-        COLUMN_OFFSETS[6], 0
-    ]);
 }
 
 
@@ -135,5 +137,25 @@ module thumb_cluster_vertical(position) {
 }
 
 
-// keyboard_half([0,0,0]);
-thumb_cluster_vertical([0,0,0]);
+module keyboard_plate() {
+    difference() {
+        PLATE_OFFSET = 10;
+        HAND_REST_HEIGHT = 110;
+        square([
+            PLATE_OFFSET + SINGLE_AND_HALF + 6 * SINGLE + PLATE_OFFSET,
+            HAND_REST_HEIGHT + 13 + 4 * SINGLE + PLATE_OFFSET
+        ]);
+        keyboard_half([PLATE_OFFSET, HAND_REST_HEIGHT, 0]);
+    }
+}
+
+
+// Compute keyboard half width.
+echo(SINGLE * 6 + SINGLE_AND_HALF + 20);
+// Left keyboard half.
+translate([5, 5, 0]) keyboard_plate();
+// Right keyboard half (mirrored).
+translate([162.5 + 5, 5 + 210, 0]) mirror([1, 0, 0]) keyboard_plate();
+
+// Right guide.
+translate([170, 0, 0]) square([10, 600]);
