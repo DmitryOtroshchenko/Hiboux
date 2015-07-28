@@ -1,6 +1,5 @@
 
 SINGLE = 19;
-HALF = SINGLE / 2;
 SINGLE_AND_HALF = 1.5 * SINGLE;
 DOUBLE = 2 * SINGLE;
 
@@ -69,10 +68,21 @@ module switch_plank_inner(position) {
 // translate([0,DOUBLE,-4]) { square([SINGLE_AND_HALF, SINGLE]); }
 
 
-column_offsets = [0, 0, HALF, SINGLE, SINGLE, SINGLE, SINGLE];
+module keyboard_half(position) {
+    COLUMN_OFFSETS = [0, 0, 7, 13, 10, 10, 10];
 
-switch_plank_outer([0, column_offsets[0], 0], false);
-for (n_row = [0:4]) {
-    switch_plank_simple([SINGLE_AND_HALF + n_row * SINGLE, column_offsets[n_row + 1], 0]);
+    switch_plank_outer([0, COLUMN_OFFSETS[0], 0], false);
+    for (n_row = [0:4]) {
+        switch_plank_simple([
+            SINGLE_AND_HALF + n_row * SINGLE,
+            COLUMN_OFFSETS[n_row + 1], 0
+        ]);
+    }
+    switch_plank_inner([
+        SINGLE_AND_HALF + 5 * SINGLE,
+        COLUMN_OFFSETS[6], 0
+    ]);
 }
-switch_plank_inner([SINGLE_AND_HALF + 5 * SINGLE, column_offsets[6], 0]);
+
+
+keyboard_half([0, 0, 0]);
