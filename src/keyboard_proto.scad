@@ -3,22 +3,29 @@ SINGLE = 19;
 SINGLE_AND_HALF = 1.5 * SINGLE;
 DOUBLE = 2 * SINGLE;
 
+SWITCH_HOLE_SIZE = 13.97;
+SWITCH_OFFSET = (SINGLE - SWITCH_HOLE_SIZE) / 2;
+
 
 module switch_hole(position) {
     // Cherry MX switch hole with the center at `position`. Sizes come
     // from the ErgoDox design.
 
-    SWITCH_HOLE_SIZE = 13.97;
-    SWITCH_OFFSET = (SINGLE - SWITCH_HOLE_SIZE) / 2;
-
-    position = [
-        position[0] + SWITCH_OFFSET,
-        position[1] + SWITCH_OFFSET
-    ];
-
-    hole_size = SWITCH_HOLE_SIZE;
     translate(position) {
-        square([hole_size, hole_size]);
+        translate([SWITCH_OFFSET, SWITCH_OFFSET, 0]) {
+            square([SWITCH_HOLE_SIZE, SWITCH_HOLE_SIZE]);
+        }
+    }
+};
+
+
+module switch_hole_double(position) {
+    // Switch hole with position adjustment.
+
+    translate(position) {
+        translate([SWITCH_OFFSET, SWITCH_OFFSET, 0]) {
+            square([SWITCH_HOLE_SIZE, SINGLE + SWITCH_HOLE_SIZE]);
+        }
     }
 };
 
@@ -87,7 +94,7 @@ module keyboard_half(position) {
 // keyboard_half([0, 0, 0]);
 
 
-module thumb_cluster_horizontal(position) {
+module thumb_cluster_horizontal_simple(position) {
     OFFSET = SINGLE;
     translate(position) {
         difference() {
@@ -106,4 +113,26 @@ module thumb_cluster_horizontal(position) {
     }
 }
 
-thumb_cluster_horizontal([0,0,0]);
+// thumb_cluster_horizontal_simple([0,0,0]);
+
+
+module thumb_cluster_horizontal(position) {
+    OFFSET = SINGLE;
+    translate(position) {
+        difference() {
+            square([
+                OFFSET + 4 * SINGLE + OFFSET,
+                OFFSET + SINGLE + SINGLE_AND_HALF + OFFSET
+            ]);
+            translate([OFFSET, OFFSET, 0]) {
+                switch_hole_double([0 * SINGLE, (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+                switch_hole_double([1 * SINGLE, (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+                switch_hole_double([2 * SINGLE, (SINGLE_AND_HALF - SINGLE) / 2, 0]);
+                switch_hole([3 * SINGLE, 0, 0]);
+                switch_hole([3 * SINGLE, SINGLE, 0]);
+            }
+        }
+    }
+}
+
+// thumb_cluster_horizontal([0,0,0]);
