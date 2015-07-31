@@ -1,5 +1,9 @@
 Keyboards
 
+- Tons of good ideas, trackpoint attachment, sculptured 3D printed keyboard with DataHand-like thumb cluster. Amazing! [http://deskthority.net/workshop-f7/my-diy-keyboard-collection-or-how-i-became-a-kb-geek-t2534.html]
+
+- Nice thoughts on switch holes diameters. [http://thume.ca/2014/09/08/creating-a-keyboard-1-hardware/]
+
 - I would assign the thumb buttons in vertical pairs that can be pressed together, such as Ctrl and Alt or Shift and Fn for easier combinations. The outer thumb keys look like they'd be a bit of a stretch, so I'd use them for quite seldom used keys, but the inner 4 thumb keys all look nicely accessible.
 
 - WASD FJ keys
@@ -39,3 +43,5 @@ Keyboards
 - Ergodox tilt stands [https://github.com/bchociej/ergodox-stand] [https://github.com/adereth/ergodox-tent] otherwise kinesis stand.
 
 - A cheap Teensy alternative [https://github.com/mchck]
+
+- A good idea about pinky row sculpturing [http://deskthority.net/workshop-f7/the-rivertron-keyboard-t1111.html?hilit=rivertron]
