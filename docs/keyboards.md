@@ -20,6 +20,10 @@ Keyboards
 
 - [https://github.com/rsheldiii/openSCAD-projects] KBD - DCS keycaps models
 
+- How to build TMK keyboard guide. [http://deskthority.net/workshop-f7/how-to-build-your-very-own-keyboard-firmware-t7177.html#p141386]
+
+- TMK home on deskthority [http://deskthority.net/workshop-f7/tmk-keyboard-firmware-collection-t4478.html]
+
 - Yogitype - a vertical keyboard
 
 - BrownFox, build log with nice explanations [http://deskthority.net/workshop-f7/brownfox-step-by-step-t6050.html]
@@ -31,3 +35,7 @@ Keyboards
 - Esrille - rare japaneese keyboard, similar to Atreus.
 
 - Rivertron - a nice project with sculptured bottom row. Unique bottom row shaping. [http://deskthority.net/workshop-f7/the-rivertron-keyboard-t1111.html?hilit=rivertron]
+
+- Ergodox tilt stands [https://github.com/bchociej/ergodox-stand] [https://github.com/adereth/ergodox-tent] otherwise kinesis stand.
+
+- A cheap Teensy alternative [https://github.com/mchck]
