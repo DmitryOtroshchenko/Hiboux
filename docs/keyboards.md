@@ -24,4 +24,10 @@ Keyboards
 
 - BrownFox, build log with nice explanations [http://deskthority.net/workshop-f7/brownfox-step-by-step-t6050.html]
 
-- Yager's keyboard [http://yager.io/keyboard/keyboard.html]. Looks solid, with custom firmware and I2P.
+- Yager's keyboard [http://yager.io/keyboard/keyboard.html]. Looks solid, with custom firmware and I2P. Custom PCB.
+
+- Atreus keyboard [https://github.com/technomancy/atreus]. Nice multilayer layout.
+
+- Esrille - rare japaneese keyboard, similar to Atreus.
+
+- Rivertron - a nice project with sculptured bottom row. Unique bottom row shaping. [http://deskthority.net/workshop-f7/the-rivertron-keyboard-t1111.html?hilit=rivertron]
