@@ -42,6 +42,8 @@ Keyboards
 
 - Ergodox tilt stands [https://github.com/bchociej/ergodox-stand] [https://github.com/adereth/ergodox-tent] otherwise kinesis stand.
 
+- Ergohox EZ stand [https://www.indiegogo.com/projects/ergodox-ez-an-incredible-mechanical-keyboard#/story]
+
 - A cheap Teensy alternative [https://github.com/mchck]
 
 - A good idea about pinky row sculpturing [http://deskthority.net/workshop-f7/the-rivertron-keyboard-t1111.html?hilit=rivertron]

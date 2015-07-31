@@ -1,7 +1,9 @@
 
 - Make teensy visible under the acrylic: under the palm or on top of the KB
 
-- Scroll wheel
+- Scroll wheel. Use capacitive like [http://pcbgadgets.com/index.php?route=product/product&product_id=54]?
+
+- Capacitive trackpad. [https://itp.nyu.edu/archive/physcomp-spring2014/sensors/Reports/Trackpad.html]
 
 - Sculptured thumb cluster in order to create a kind of half-pipe.
 
