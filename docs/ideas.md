@@ -110,3 +110,7 @@ And also put a FN0, or whatever entry number it is in the Actions list, onto wha
 - keyboard.io evolution [http://blog.fsck.com/2013/12/better-and-better-keyboards.html]
 
 - Wooden glossy case?
+
+- Nice 3D keys models [http://www.thingiverse.com/thing:468651]
+
+- Can make keycap attachment tighter by putting a square of scotch tape on switch's stem.
