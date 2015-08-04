@@ -10,7 +10,8 @@ SINGLE_AND_HALF = SINGLE * 1.5;
 
 module key_base(type, width, is_simplified=false) {
     if (type == 0) {
-        resize([KW, KW * width / SINGLE, KEY_HEIGHT]) {
+        //resize([KW, KW * width / SINGLE, KEY_HEIGHT])
+        {
             KEYCAP_OFFSET = -1;
             if (is_simplified) {
                 WN_OFFSET = (KEY_WIDE - KEY_NARROW) / 2;
@@ -76,30 +77,37 @@ angles = [
 offsets_x = [0.5, 1, 1, 0.5];
 offsets_z = [-0.5, 0, 0, 0.5];
 
-
-translate([0, 0, 0]) {
-    translate([-10, -3, -7]) cube([5, 126.7, 9]);
-    difference() {
-        intersection() {
-            translate([-10, -3, -40]) cube([100, 130, 45]);
+//mirror([0, 1, 0]) {
+module keyboard_old(with_keys=false) {
+    translate([0, 0, 0]) {
+        translate([-10, -3, -7]) cube([5, 126.7, 9]);
+        difference() {
+            intersection() {
+                translate([-10, -3, -40]) cube([100, 130, 45]);
+                union() {
+                    for (i = [0:4]) {
+                        translate([0, SINGLE * i, 0]) column(1, angles[i], offsets_x, offsets_z);
+                    }
+                    translate([0, SINGLE * 5, 0]) column(1, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
+                    translate([0, -3, 0]) column(1, angles[0], offsets_x, offsets_z);
+                }
+            }
             union() {
                 for (i = [0:4]) {
-                    translate([0, SINGLE * i, 0]) column(1, angles[i], offsets_x, offsets_z);
+                    translate([0, SINGLE * i, 0]) column(2, angles[i], offsets_x, offsets_z);
                 }
-                translate([0, SINGLE * 5, 0]) column(1, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
-                translate([0, -3, 0]) column(1, angles[0], offsets_x, offsets_z);
+                translate([0, SINGLE * 5, 0]) column(2, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
             }
         }
-        union() {
-            for (i = [0:4]) {
-                translate([0, SINGLE * i, 0]) column(2, angles[i], offsets_x, offsets_z);
-            }
-            translate([0, SINGLE * 5, 0]) column(2, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
-        }
-    }
 
-    for (i = [0:4]) {
-        translate([0, SINGLE * i, 0]) column(0, angles[i], offsets_x, offsets_z);
+        if (with_keys) {
+            for (i = [0:4]) {
+                translate([0, SINGLE * i, 0]) column(0, angles[i], offsets_x, offsets_z);
+            }
+            translate([0, SINGLE * 5, 0]) column(0, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
+        }
     }
-    translate([0, SINGLE * 5, 0]) column(0, angles[5], offsets_x, offsets_z, SINGLE_AND_HALF);
 }
+
+
+keyboard_old();
