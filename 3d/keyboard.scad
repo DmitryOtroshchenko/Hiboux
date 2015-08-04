@@ -1,8 +1,9 @@
 
 KW = 18.4;
 SINGLE = 19;
+SINGLE_AND_HALF = SINGLE * 1.5;
 
-module key_base(type, is_simplified=true) {
+module key_base(type, width=SINGLE, is_simplified=false) {
     if (type == 0) {
         KEYCAP_OFFSET = -1;
         if (is_simplified) {
@@ -21,7 +22,7 @@ module key_base(type, is_simplified=true) {
         }
     } else if (type == 1) {
         CASE_EXTRUSION_DEPTH = 200;
-        CASE_OFFSET = 6.5;
+        CASE_OFFSET = 6.7;
         translate([-KW, 0, -CASE_EXTRUSION_DEPTH - CASE_OFFSET]) {
             cube([4 * KW, SINGLE + 1, CASE_EXTRUSION_DEPTH]);
         }
@@ -69,21 +70,21 @@ angles = [
 offsets_x = [0.5, 1, 1, 0.5];
 offsets_z = [-0.5, 0, 0, 0.5];
 
-//translate([30, 0, -20]) cube([10, 10, 30]);
+
 translate([0, 0, 0]) {
     difference() {
         intersection() {
             translate([-20, 0, -40]) cube([110, 120, 45]);
-            for (i = [0:5]) {
+            for (i = [0:4]) {
                 translate([0, SINGLE * i, 0]) column(1, angles[i], offsets_x, offsets_z);
             }
         }
-        for (i = [0:5]) {
+        for (i = [0:4]) {
             translate([0, SINGLE * i, 0]) column(2, angles[i], offsets_x, offsets_z);
         }
     }
 
-    for (i = [0:5]) {
+    for (i = [0:4]) {
         translate([0, SINGLE * i, 0]) column(0, angles[i], offsets_x, offsets_z);
     }
 }
