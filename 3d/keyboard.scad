@@ -32,7 +32,7 @@ module key_base(type, width, is_simplified=false) {
         }
     } else if (type == 2){
         translate([0, (width - SINGLE) / 2, 0]) {
-            HOLE_WIDTH = 14;
+            HOLE_WIDTH = 13.97 - 0.1;
             HOLE_OFFSET = (KW - HOLE_WIDTH) / 2;
             HOLE_HEIGHT = 40;
             translate([HOLE_OFFSET, HOLE_OFFSET, -HOLE_HEIGHT + 1]) {
