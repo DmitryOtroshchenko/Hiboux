@@ -27,8 +27,8 @@ module key_base(type, width, is_simplified=false) {
     } else if (type == 1) {
         CASE_EXTRUSION_DEPTH = 200;
         CASE_OFFSET = 6.7;
-        translate([-KW, 0, -CASE_EXTRUSION_DEPTH - CASE_OFFSET]) {
-            cube([4 * KW, width + 1, CASE_EXTRUSION_DEPTH]);
+        translate([-KW, -2, -CASE_EXTRUSION_DEPTH - CASE_OFFSET]) {
+            cube([4 * KW, width + 4, CASE_EXTRUSION_DEPTH]);
         }
     } else if (type == 2){
         translate([0, (width - SINGLE) / 2, 0]) {
@@ -78,9 +78,10 @@ offsets_z = [-0.5, 0, 0, 0.5];
 
 
 translate([0, 0, 0]) {
+    translate([-10, -2, -7]) cube([5, 127.5, 9]);
     difference() {
         intersection() {
-            translate([-10, 0, -40]) cube([100, 120, 45]);
+            translate([-10, -3, -40]) cube([100, 130, 45]);
             union() {
                 for (i = [0:4]) {
                     translate([0, SINGLE * i, 0]) column(1, angles[i], offsets_x, offsets_z);
