@@ -1,19 +1,29 @@
 
-KW = 18;
+KW = 18.4;
 SINGLE = 19;
-KH = 10;
 
-module key_base(type) {
+module key_base(type, is_simplified=true) {
     if (type == 0) {
         KEYCAP_OFFSET = -1;
-        translate([KW / 2, KW / 2, KEYCAP_OFFSET]) {
-            import("./keycaps/mx_dsa.stl");
+        if (is_simplified) {
+            KEY_WIDE = 18.4;
+            KEY_NARROW = 12.7;
+            KEY_HEIGHT = 7.4;
+            WN_OFFSET = (KEY_WIDE - KEY_NARROW) / 2;
+            translate([WN_OFFSET, WN_OFFSET, 0]) {
+                cube([KEY_NARROW, KEY_NARROW, KEY_HEIGHT]);
+            }
+        }
+        else {
+            translate([KW / 2, KW / 2, KEYCAP_OFFSET]) {
+                import("./keycaps/mx_dsa.stl");
+            }
         }
     } else if (type == 1) {
         CASE_EXTRUSION_DEPTH = 200;
         CASE_OFFSET = 6.5;
         translate([-KW, 0, -CASE_EXTRUSION_DEPTH - CASE_OFFSET]) {
-            cube([4 * KW, SINGLE, CASE_EXTRUSION_DEPTH]);
+            cube([4 * KW, SINGLE + 1, CASE_EXTRUSION_DEPTH]);
         }
     } else if (type == 2){
         HOLE_WIDTH = 14;
