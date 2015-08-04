@@ -49,24 +49,32 @@ module column(type, angles, offsets_x, offsets_z) {
 
 
 // translate([20, 0, -20]) cube([10, 10, 20]);
-angles = [70, 30, 0, -30, -60];
+angles = [
+    [50, 30, 0, -30, -60],
+    [50, 30, 0, -30, -60],
+    [50, 30, 0, -20, -50],
+    [50, 30, 0, -30, -60],
+    [50, 30, 0, -40, -70],
+    [50, 30, 0, -40, -70]
+];
 offsets_x = [1, 1.5, 1.5, 1];
 offsets_z = [-1, 0, 0, 1];
 
+translate([30, 0, -20]) cube([10, 10, 30]);
 translate([0, 0, 0]) {
     difference() {
         intersection() {
-            translate([-5, 0, -32]) cube([80, 120, 35]);
+            translate([-15, 0, -32]) cube([100, 120, 40]);
             for (i = [0:5]) {
-                translate([0, KSPACE * i, 0]) column(1, angles, offsets_x, offsets_z);
+                translate([0, KSPACE * i, 0]) column(1, angles[i], offsets_x, offsets_z);
             }
         }
         for (i = [0:5]) {
-            translate([0, KSPACE * i, 0]) column(2, angles, offsets_x, offsets_z);
+            translate([0, KSPACE * i, 0]) column(2, angles[i], offsets_x, offsets_z);
         }
     }
 
     for (i = [0:5]) {
-        translate([0, KSPACE * i, 0]) column(0, angles, offsets_x, offsets_z);
+        translate([0, KSPACE * i, 0]) column(0, angles[i], offsets_x, offsets_z);
     }
 }
