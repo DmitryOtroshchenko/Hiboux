@@ -1,5 +1,5 @@
 
-include <common.scad>;
+include <../common.scad>;
 
 
 module column_var_size(type, angles, offsets_x, offsets_z, width, enabled) {

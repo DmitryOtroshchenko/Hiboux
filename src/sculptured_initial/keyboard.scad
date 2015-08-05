@@ -1,6 +1,6 @@
 
-include <common.scad>;
-include <keycaps/dsa.scad>;
+include <../common.scad>;
+include <../keycaps/dsa.scad>;
 include <column.scad>;
 
 
