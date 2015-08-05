@@ -6,7 +6,7 @@ KEY_NARROW = 12.7;
 KEY_HEIGHT = 7.4;
 
 
-module key_base(type, width, is_simplified=false) {
+module key_base(type, width, is_simplified=true) {
     if (type == 0) {
         // TODO: comment and clean.
         //resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, KEY_HEIGHT])
@@ -14,7 +14,33 @@ module key_base(type, width, is_simplified=false) {
             if (is_simplified) {
                 WN_OFFSET = (KEY_WIDTH - KEY_NARROW) / 2;
                 translate([WN_OFFSET, WN_OFFSET, 0]) {
-                    cube([KEY_NARROW, KEY_NARROW, KEY_HEIGHT]);
+                    // cube([KEY_NARROW, KEY_NARROW, KEY_HEIGHT]);
+                    polyhedron(
+                        points=[
+                            [0, 0, 0],
+                            [KEY_WIDTH, 0, 0],
+                            [KEY_WIDTH, KEY_WIDTH, 0],
+                            [0, KEY_WIDTH, 0],
+                            [WN_OFFSET, WN_OFFSET, KEY_HEIGHT],
+                            [WN_OFFSET + KEY_NARROW, WN_OFFSET, KEY_HEIGHT],
+                            [WN_OFFSET + KEY_NARROW, WN_OFFSET + KEY_NARROW, KEY_HEIGHT],
+                            [WN_OFFSET, WN_OFFSET + KEY_NARROW, KEY_HEIGHT],
+                        ],
+                        faces=[
+                            [0,1,2],
+                            [2, 3, 0],
+                            [5, 4, 6],
+                            [6, 4, 7],
+                            [0, 4, 1],
+                            [4, 5, 1],
+                            [1, 5, 2],
+                            [5, 6, 2],
+                            [2, 6, 3],
+                            [6, 7, 3],
+                            [3, 7, 0],
+                            [7, 4, 0]
+                        ]
+                    );
                 }
             }
             else {
