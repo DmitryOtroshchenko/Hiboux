@@ -1,26 +1,5 @@
 
-SINGLE = 19;
-SINGLE_AND_HALF = 1.5 * SINGLE;
-DOUBLE = 2 * SINGLE;
-
-
-module switch_hole(position, is_double=false) {
-    // Cherry MX switch hole with the center at `position`. Sizes come
-    // from the ErgoDox design.
-
-    SWITCH_HOLE_SIZE = 13.97;
-    SWITCH_OFFSET = (SINGLE - SWITCH_HOLE_SIZE) / 2;
-
-    translate(position) {
-        translate([SWITCH_OFFSET, SWITCH_OFFSET, 0]) {
-            if (is_double) {
-                square([SWITCH_HOLE_SIZE, SINGLE + SWITCH_HOLE_SIZE]);
-            } else {
-                square([SWITCH_HOLE_SIZE, SWITCH_HOLE_SIZE]);
-            }
-        }
-    }
-};
+include <../common.scad>
 
 
 module switch_plank_outer(position, use_double=false) {
