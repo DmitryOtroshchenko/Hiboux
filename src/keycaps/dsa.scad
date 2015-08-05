@@ -77,6 +77,7 @@ module key_base(type, width, is_simplified=USE_SIMPLIFIED_KEYS) {
         // split in two and added to the left and to the right of the hole.
         // This code works correctly only with horizontal keys.
         translate([0, (width - SINGLE) / 2, 0]) {
+            // TODO: use swith hole intead.
             // The standard offset between a single keycap contour and the
             // corresponding hole.
             HOLE_OFFSET = (KEY_WIDTH - HOLE_SIZE) / 2;
