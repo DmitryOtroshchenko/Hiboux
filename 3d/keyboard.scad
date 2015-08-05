@@ -66,19 +66,19 @@ module column(type, angles, offsets_x, offsets_z, width=SINGLE) {
 }
 
 
-angles = [
-    [50, 30, 0, -30, -65],
-    [50, 30, 0, -30, -65],
-    [50, 30, 0, -20, -55],
-    [50, 30, 0, -30, -65],
-    [50, 30, 0, -40, -70],
-    [50, 30, 0, -40, -70]
-];
-offsets_x = [0.5, 1, 1, 0.5];
-offsets_z = [-0.5, 0, 0, 0.5];
-
 //mirror([0, 1, 0]) {
 module keyboard_old(with_keys=false) {
+    angles = [
+        [50, 30, 0, -30, -65],
+        [50, 30, 0, -30, -65],
+        [50, 30, 0, -20, -55],
+        [50, 30, 0, -30, -65],
+        [50, 30, 0, -40, -70],
+        [50, 30, 0, -40, -70]
+    ];
+    offsets_x = [0.5, 1, 1, 0.5];
+    offsets_z = [-0.5, 0, 0, 0.5];
+
     translate([0, 0, 0]) {
         translate([-10, -3, -7]) cube([5, 126.7, 9]);
         difference() {
@@ -110,4 +110,4 @@ module keyboard_old(with_keys=false) {
 }
 
 
-keyboard_old();
+//keyboard_old();
