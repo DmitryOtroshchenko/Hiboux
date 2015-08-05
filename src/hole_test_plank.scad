@@ -30,9 +30,9 @@ translate([OFFSET, OFFSET, 0]) {
                 translate([SINGLE * n_button + SINGLE / 2, 10]) {
                     rotate([0, 0, 90]) {
                         text(
-                            str(delta), 
-                            font="Consolas", 
-                            size=5, 
+                            str(delta),
+                            font="Consolas",
+                            size=5,
                             halign="center",
                             valign="center"
                         );
