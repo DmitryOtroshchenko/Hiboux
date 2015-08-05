@@ -2,35 +2,47 @@
 include <../common.scad>
 
 
-KEY_NARROW = 12.7;
-KEY_HEIGHT = 7.4;
+// DSA keycap top width.
+DSA_TOP_WIDTH = 12.7;
+// DSA keycap height.
+DSA_HEIGHT = 7.4;
+
+USE_SIMPLIFIED_KEYS = true;
 
 
-module key_base(type, width, is_simplified=true) {
+module key_base(type, width, is_simplified=USE_SIMPLIFIED_KEYS) {
     if (type == 0) {
-        // TODO: comment and clean.
-        //resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, KEY_HEIGHT])
-        {
+        // A simple way to produce 1.5 and double horizontal keys.
+        resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, DSA_HEIGHT]) {
+            // Simplified geometry is much faster to render.
             if (is_simplified) {
-                WN_OFFSET = (KEY_WIDTH - KEY_NARROW) / 2;
+                WN_OFFSET = (KEY_WIDTH - DSA_TOP_WIDTH) / 2;
+                // Draw a keycap as a big bottom and a smaller top squares
+                // connected by 4 side faces.
+                // TODO: why do we use this translation?
                 translate([WN_OFFSET, WN_OFFSET, 0]) {
-                    // cube([KEY_NARROW, KEY_NARROW, KEY_HEIGHT]);
+                    // cube([DSA_TOP_WIDTH, DSA_TOP_WIDTH, DSA_HEIGHT]);
                     polyhedron(
                         points=[
+                            // Bottom
                             [0, 0, 0],
                             [KEY_WIDTH, 0, 0],
                             [KEY_WIDTH, KEY_WIDTH, 0],
                             [0, KEY_WIDTH, 0],
-                            [WN_OFFSET, WN_OFFSET, KEY_HEIGHT],
-                            [WN_OFFSET + KEY_NARROW, WN_OFFSET, KEY_HEIGHT],
-                            [WN_OFFSET + KEY_NARROW, WN_OFFSET + KEY_NARROW, KEY_HEIGHT],
-                            [WN_OFFSET, WN_OFFSET + KEY_NARROW, KEY_HEIGHT],
+                            // Top
+                            [WN_OFFSET, WN_OFFSET, DSA_HEIGHT],
+                            [WN_OFFSET + DSA_TOP_WIDTH, WN_OFFSET, DSA_HEIGHT],
+                            [WN_OFFSET + DSA_TOP_WIDTH, WN_OFFSET + DSA_TOP_WIDTH, DSA_HEIGHT],
+                            [WN_OFFSET, WN_OFFSET + DSA_TOP_WIDTH, DSA_HEIGHT],
                         ],
                         faces=[
-                            [0,1,2],
+                            // Bottom
+                            [0, 1, 2],
                             [2, 3, 0],
+                            // Top
                             [5, 4, 6],
                             [6, 4, 7],
+                            // Sides
                             [0, 4, 1],
                             [4, 5, 1],
                             [1, 5, 2],
