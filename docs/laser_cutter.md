@@ -19,8 +19,9 @@ Cutting speed depending on material, thickness, laser power
 
 - ON/OFF top-left and behind
 
+- I was cutting my first keyboard prototype with 100% power and 1% speed, 2 traces per contour. Cutting has taken 12 min.
 
-Usage 
+Usage
 
 - Íf all interlock-secured covers are closed, immediately after being switched on, the device starts the referencing process. When the referencing process is completed correctly, an acoustic signal sounds and the device is ready for operation. The readiness for operation is additionally displayed by green (slow) flashing of status display (9).
 
