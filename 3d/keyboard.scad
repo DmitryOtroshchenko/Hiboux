@@ -1,50 +1,6 @@
 
 include <common.scad>;
-
-
-KEY_NARROW = 12.7;
-KEY_HEIGHT = 7.4;
-
-
-module key_base(type, width, is_simplified=false) {
-    if (type == 0) {
-        //resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, KEY_HEIGHT])
-        {
-            KEYCAP_OFFSET = -1;
-            if (is_simplified) {
-                WN_OFFSET = (KEY_WIDTH - KEY_NARROW) / 2;
-                translate([WN_OFFSET, WN_OFFSET, 0]) {
-                    cube([KEY_NARROW, KEY_NARROW, KEY_HEIGHT]);
-                }
-            }
-            else {
-                translate([KEY_WIDTH / 2, KEY_WIDTH / 2, KEYCAP_OFFSET]) {
-                    import("./keycaps/mx_dsa.stl");
-                }
-            }
-        }
-    } else if (type == 1) {
-        CASE_EXTRUSION_DEPTH = 200;
-        CASE_OFFSET = 6.7;
-        translate([-KEY_WIDTH, -0.1, -CASE_EXTRUSION_DEPTH - CASE_OFFSET]) {
-            cube([4 * KEY_WIDTH, width + 0.2, CASE_EXTRUSION_DEPTH]);
-        }
-    } else if (type == 2){
-        translate([0, (width - SINGLE) / 2, 0]) {
-            HOLE_WIDTH = 13.97 - 0.1;
-            HOLE_OFFSET = (KEY_WIDTH - HOLE_WIDTH) / 2;
-            HOLE_HEIGHT = 40;
-            translate([HOLE_OFFSET, HOLE_OFFSET, -HOLE_HEIGHT + 1]) {
-                cube([HOLE_WIDTH, HOLE_WIDTH, HOLE_HEIGHT]);
-            }
-        }
-    }
-}
-
-
-module key(angle, type, width) {
-    rotate(angle, [0, 1, 0]) key_base(type, width);
-}
+include <keycaps/dsa.scad>;
 
 
 module column(type, angles, offsets_x, offsets_z, width=SINGLE) {
