@@ -32,7 +32,7 @@ module connector_bar(width, thickness, max_height) {
 
 
 module keyboard_stand(length, width, thickness, angle, stand_wall_thickness=5, spacer_diameter=6) {
-    max_height = 30;
+    max_height = length * tan(angle);
     spacer_holder_size = spacer_diameter + 2 * stand_wall_thickness;
     difference() {
         difference() {
