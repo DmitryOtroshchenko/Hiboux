@@ -74,7 +74,7 @@ class KeyUnit(object):
 
 class Column(object):
 
-    def __init__(self, y, mask, angles, offsets_x, offsets_z):
+    def __init__(self, y, height, mask, angles, offsets_x, offsets_z):
         assert len(mask) == len(angles) == len(offsets_x) == len(offsets_z) == 5, \
             'Incorrect column parameters.'
         self.mask = mask
@@ -82,11 +82,14 @@ class Column(object):
         self.offsets_x = offsets_x
         self.offsets_z = offsets_z
 
+        assert height >= 0, 'Incorrect column initial height.'
+
         self.keys = []
         xmax = 0
-        prev_key_height = 60
+        prev_key_height = height
         for is_present, a, ox, oz in itertools.izip(self.mask, self.angles, self.offsets_x, self.offsets_z):
             new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz)
+            # TODO: not the most straightforward solution.
             if is_present:
                 self.keys.append(new_key)
 
@@ -116,7 +119,7 @@ union() {{
 
 class Keyboard(object):
 
-    def __init__(self, masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z):
+    def __init__(self, height, masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z):
 
         self.masks = np.asarray(masks)
         self.angles = np.asarray(angles)
@@ -139,6 +142,7 @@ class Keyboard(object):
         for col_ix in xrange(len(self.angles)):
             new_col = Column(
                 ymax,
+                height,
                 self.masks[col_ix],
                 self.angles[col_ix],
                 self.offsets_x[col_ix],
@@ -169,13 +173,9 @@ def main():
     a15 = a90 / 6
     a10 = a90 / 9
 
-    # angles = [a45, a15, 0, -a15, -a45]
-    # offsets_x = [0, 1, 1, 1, 1]
-    # offsets_z = [0, -1, -1, 1, 1]
-    # col = Column(10, angles, offsets_x, offsets_z)
-    # print()
-    # print(col.to_openscad())
-
+    # TODO: add column widths.
+    # TODO: add y offsets between columns.
+    # TODO: Add row widths.
     masks = [
         [True, True, True, True, True],
         [True, True, True, True, True],
@@ -185,8 +185,8 @@ def main():
         [False, True, True, True, True],
     ]
     angles = [
-        [a45, a15, 0, -a15, -a45],
-        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a30, -a60],
+        [a45, a15, 0, -a30, -a60],
         [a45, a15, 0, -a15, -a45],
         [a45, a15, 0, -a15, -a45],
         [a45, a15, 0, -a15, -a45],
@@ -209,8 +209,8 @@ def main():
         [0, -1, -1, 1, 1],
     ]
     col_offsets_x = [0, 0, 0, 0, 0, 0]
-    col_offsets_z = [0, 0, -7, -9, -4, -4]
-    kbd = Keyboard(masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z)
+    col_offsets_z = [4.5, 4.5, 1, 0, 2, 2]
+    kbd = Keyboard(30, masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z)
     print(kbd.to_openscad())
 
 
