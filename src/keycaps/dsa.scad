@@ -13,7 +13,7 @@ USE_SIMPLIFIED_KEYS = true;
 module key_base(type, width, is_simplified=USE_SIMPLIFIED_KEYS) {
     if (type == 0) {
         // A simple way to produce 1.5 and double horizontal keys.
-        resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, DSA_HEIGHT]) {
+        color("DarkSlateGray") resize([KEY_WIDTH, KEY_WIDTH * width / SINGLE, DSA_HEIGHT]) {
             // Simplified geometry is much faster to render.
             if (is_simplified) {
                 WN_OFFSET = (KEY_WIDTH - DSA_TOP_WIDTH) / 2;
@@ -58,7 +58,7 @@ module key_base(type, width, is_simplified=USE_SIMPLIFIED_KEYS) {
             else {
                 KEYCAP_OFFSET = -1;
                 translate([KEY_WIDTH / 2, KEY_WIDTH / 2, KEYCAP_OFFSET]) {
-                    import("./keycaps/mx_dsa.stl");
+                    import("../keycaps/mx_dsa.stl");
                 }
             }
         }
