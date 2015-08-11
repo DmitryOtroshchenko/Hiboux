@@ -83,7 +83,7 @@ class Column(object):
 
         self.keys = []
         xmax = 0
-        prev_key_height = 40
+        prev_key_height = 60
         for a, ox, oz in itertools.izip(self.angles, self.offsets_x, self.offsets_z):
             new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz)
             self.keys.append(new_key)
@@ -114,13 +114,22 @@ union() {{
 
 class Keyboard(object):
 
-    def __init__(self, angles, offsets_x, offsets_z):
+    def __init__(self, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z):
 
         self.angles = np.asarray(angles)
         self.offsets_x = np.asarray(offsets_x)
         self.offsets_z = np.asarray(offsets_z)
 
-        assert self.angles.shape == self.offsets_x.shape == self.offsets_z.shape, 'Incorrect keyboard parameters.'
+        assert self.angles.shape == self.offsets_x.shape == self.offsets_z.shape, \
+            'Incorrect keyboard parameters.'
+
+        self.col_offsets_x = np.asarray(col_offsets_x)
+        self.col_offsets_z = np.asarray(col_offsets_z)
+        assert len(self.col_offsets_x) == len(self.col_offsets_z) == len(self.angles), \
+            'Incorrect column offsets.'
+
+        self.offsets_x[:, 0] += self.col_offsets_x
+        self.offsets_z[:, 0] += self.col_offsets_z
 
         self.columns = []
         ymax = 0
@@ -129,13 +138,22 @@ class Keyboard(object):
                 ymax,
                 self.angles[col_ix],
                 self.offsets_x[col_ix],
-                self.offsets_z[col_ix]
+                self.offsets_z[col_ix],
             )
             self.columns.append(new_col)
             ymax += KeyUnit.SINGLE
 
     def to_openscad(self):
-        openscad_repr = '\n'.join(col.to_openscad() for col in self.columns)
+        header = '''
+include <../common.scad>;
+include <../keycaps/dsa.scad>;
+include <one_key_unit.scad>;
+
+USE_SIMPLIFIED_KEYS = false;
+
+'''
+        columns_repr = '\n'.join(col.to_openscad() for col in self.columns)
+        openscad_repr = ''.join([header, columns_repr])
         return openscad_repr
 
 
@@ -178,9 +196,11 @@ def main():
         [0, -1, -1, 1, 1],
         [0, -1, -1, 1, 1],
     ]
-    kbd = Keyboard(angles, offsets_x, offsets_z)
+    col_offsets_x = [0, 0, 0, 0, 0, 0]
+    col_offsets_z = [0, 0, -7, -9, -4, -4]
+    # col_offsets_z = [0, 0, 0, 0, 0, 0]
+    kbd = Keyboard(angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z)
     print(kbd.to_openscad())
-
 
 
 if __name__ == '__main__':
