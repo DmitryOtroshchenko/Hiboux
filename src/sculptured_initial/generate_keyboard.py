@@ -173,9 +173,13 @@ def main():
     a15 = a90 / 6
     a10 = a90 / 9
 
-    # TODO: add column widths.
-    # TODO: add y offsets between columns.
-    # TODO: Add row widths.
+    # TODO: add column widths. 2
+    # TODO: add y offsets between columns. 1
+    # TODO: Add row widths. 3
+    # TODO: Add spacers. 3
+    # TODO: Add thumb clusters. 5
+    # TODO: Add different keycap models. 5
+    # TODO: Figure out why column height offsets work. 2
     masks = [
         [True, True, True, True, True],
         [True, True, True, True, True],
