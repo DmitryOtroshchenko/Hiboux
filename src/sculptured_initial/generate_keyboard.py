@@ -119,7 +119,9 @@ union() {{
 
 class Keyboard(object):
 
-    def __init__(self, height, masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z):
+    def __init__(self, height,
+            masks, angles, offsets_x, offsets_z,
+            col_offsets_x, col_offsets_y, col_offsets_z):
 
         self.masks = np.asarray(masks)
         self.angles = np.asarray(angles)
@@ -130,16 +132,19 @@ class Keyboard(object):
             'Incorrect keyboard parameters.'
 
         self.col_offsets_x = np.asarray(col_offsets_x)
+        self.col_offsets_y = np.asarray(col_offsets_y)
         self.col_offsets_z = np.asarray(col_offsets_z)
-        assert len(self.col_offsets_x) == len(self.col_offsets_z) == len(self.angles), \
+        assert len(self.col_offsets_x) == len(self.col_offsets_y) == len(self.col_offsets_z) == len(self.angles), \
             'Incorrect column offsets.'
 
+        # TODO: refactor?
         self.offsets_x[:, 0] += self.col_offsets_x
         self.offsets_z[:, 0] += self.col_offsets_z
 
         self.columns = []
         ymax = 0
         for col_ix in xrange(len(self.angles)):
+            ymax += col_offsets_y[col_ix]
             new_col = Column(
                 ymax,
                 height,
@@ -180,6 +185,7 @@ def main():
     # TODO: Add thumb clusters. 5
     # TODO: Add different keycap models. 5
     # TODO: Figure out why column height offsets work. 2
+    # TODO: Improve colors. 1
     masks = [
         [True, True, True, True, True],
         [True, True, True, True, True],
@@ -213,8 +219,13 @@ def main():
         [0, -1, -1, 1, 1],
     ]
     col_offsets_x = [0, 0, 0, 0, 0, 0]
+    col_offsets_y = [0, 0, 0, 0, 0, 0]
     col_offsets_z = [4.5, 4.5, 1, 0, 2, 2]
-    kbd = Keyboard(30, masks, angles, offsets_x, offsets_z, col_offsets_x, col_offsets_z)
+    kbd = Keyboard(
+        30,
+        masks, angles, offsets_x, offsets_z,
+        col_offsets_x, col_offsets_y, col_offsets_z
+    )
     print(kbd.to_openscad())
 
 
