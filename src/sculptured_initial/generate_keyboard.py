@@ -74,7 +74,7 @@ class KeyUnit(object):
 
 class Column(object):
 
-    def __init__(self, angles, offsets_x, offsets_z):
+    def __init__(self, y, angles, offsets_x, offsets_z):
         assert len(angles) == len(offsets_x) == len(offsets_z) == 5, \
             'Incorrect column parameters.'
         self.angles = angles
@@ -85,7 +85,7 @@ class Column(object):
         xmax = 0
         prev_key_height = 40
         for a, ox, oz in itertools.izip(self.angles, self.offsets_x, self.offsets_z):
-            new_key = KeyUnit(a, [xmax + ox, 0, oz], prev_key_height + oz)
+            new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz)
             self.keys.append(new_key)
 
             xmax = new_key.xmax
@@ -112,6 +112,33 @@ union() {{
         return openscad_repr
 
 
+class Keyboard(object):
+
+    def __init__(self, angles, offsets_x, offsets_z):
+
+        self.angles = np.asarray(angles)
+        self.offsets_x = np.asarray(offsets_x)
+        self.offsets_z = np.asarray(offsets_z)
+
+        assert self.angles.shape == self.offsets_x.shape == self.offsets_z.shape, 'Incorrect keyboard parameters.'
+
+        self.columns = []
+        ymax = 0
+        for col_ix in xrange(len(self.angles)):
+            new_col = Column(
+                ymax,
+                self.angles[col_ix],
+                self.offsets_x[col_ix],
+                self.offsets_z[col_ix]
+            )
+            self.columns.append(new_col)
+            ymax += KeyUnit.SINGLE
+
+    def to_openscad(self):
+        openscad_repr = '\n'.join(col.to_openscad() for col in self.columns)
+        return openscad_repr
+
+
 def main():
     a90 = np.pi / 2
     a60 = np.pi / 3
@@ -120,13 +147,40 @@ def main():
     a15 = a90 / 6
     a10 = a90 / 9
 
-    angles = [a45, a15, 0, -a15, -a45]
-    offsets_x = [0, 1, 1, 1, 1]
-    offsets_z = [0, -1, -1, 1, 1]
-    col = Column(angles, offsets_x, offsets_z)
+    # angles = [a45, a15, 0, -a15, -a45]
+    # offsets_x = [0, 1, 1, 1, 1]
+    # offsets_z = [0, -1, -1, 1, 1]
+    # col = Column(10, angles, offsets_x, offsets_z)
+    # print()
+    # print(col.to_openscad())
 
-    print()
-    print(col.to_openscad())
+    angles = [
+        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a15, -a45],
+        [a45, a15, 0, -a15, -a45],
+    ]
+    offsets_x = [
+        [0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1],
+        [0, 1, 1, 1, 1],
+    ]
+    offsets_z = [
+        [0, -1, -1, 1, 1],
+        [0, -1, -1, 1, 1],
+        [0, -1, -1, 1, 1],
+        [0, -1, -1, 1, 1],
+        [0, -1, -1, 1, 1],
+        [0, -1, -1, 1, 1],
+    ]
+    kbd = Keyboard(angles, offsets_x, offsets_z)
+    print(kbd.to_openscad())
+
 
 
 if __name__ == '__main__':
