@@ -114,3 +114,15 @@ And also put a FN0, or whatever entry number it is in the Actions list, onto wha
 - Nice 3D keys models [http://www.thingiverse.com/thing:468651]
 
 - Can make keycap attachment tighter by putting a square of scotch tape on switch's stem.
+
+- A project very similar to mine [http://deskthority.net/workshop-f7/curved-split-keyboard-prototype-t8472.html]
+
+- Suka-style kbd [http://deskthority.net/workshop-f7/my-custom-ergonomic-suka-style-t10410.html]
+
+- Use hand rest like in [http://geektimes.ru/post/257910/]
+
+- A nice flat layout [https://www.flickr.com/photos/obra/8614513509/in/photostream/]
+
+- Best mouse project ever! [http://deskthority.net/workshop-f7/rodent-mark-ii-t6367.html]
+
+- DataHand thumb cluster.
