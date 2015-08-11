@@ -8,7 +8,7 @@ import numpy as np
 
 
 def pos_to_openscad(pos):
-    assert len(pos) == 2, 'Incorrect pos.'
+    assert len(pos) == 3, 'Incorrect pos.'
     openscad_repr = ', '.join(str(coord) for coord in pos)
     openscad_repr = '[{}]'.format(openscad_repr)
     return openscad_repr
@@ -26,25 +26,16 @@ class KeyUnit(object):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
 
-        try:
-            close_height = float(prev_key_or_height)
-        except TypeError:
-            prev_key = prev_key_or_height
-            close_height = prev_key.far_height
-
+        close_height = float(prev_key_or_height)
         assert close_height > 0, 'Invalid key height.'
         self.close_height = close_height
         self.far_height = self.close_height - self.KEY_WIDTH * np.sin(self.angle)
 
         self.pos = np.asarray(pos)
-        assert self.pos.shape == (2,), 'Incorrect coordinate format.'
+        assert self.pos.shape == (3,), 'Incorrect coordinate format.'
 
         self.width = self.SINGLE
         self.depth = self.KEY_WIDTH * np.cos(self.angle)
-
-    @property
-    def keycap_offset(self):
-        return self.KEYCAP_TO_PLATE_OFFSET / np.cos(self.angle)
 
     @property
     def max_height(self):
@@ -60,7 +51,7 @@ class KeyUnit(object):
 
     @property
     def xmax(self):
-        return self.pos[0] + self.depth
+        return self.xmin + self.depth
 
     @property
     def ymin(self):
@@ -68,7 +59,7 @@ class KeyUnit(object):
 
     @property
     def ymax(self):
-        return self.pos[1] + self.width
+        return self.ymin + self.width
 
     def to_openscad(self, what):
         assert what in {'key', 'support', 'hole'}, 'What?'
@@ -92,12 +83,13 @@ class Column(object):
 
         self.keys = []
         xmax = 0
-        prev_key = 40
+        prev_key_height = 40
         for a, ox, oz in itertools.izip(self.angles, self.offsets_x, self.offsets_z):
-            new_key = KeyUnit(a, [xmax, 0], prev_key)
+            new_key = KeyUnit(a, [xmax + ox, 0, oz], prev_key_height + oz)
             self.keys.append(new_key)
+
             xmax = new_key.xmax
-            prev_key = new_key
+            prev_key_height = new_key.far_height
 
     def to_openscad(self):
         openscad_repr = '''
@@ -121,9 +113,16 @@ union() {{
 
 
 def main():
-    angles = [np.pi / 4, np.pi / 12, 0, -np.pi / 12, -np.pi / 4]
-    offsets_x = [0, 0, 0, 0, 0]
-    offsets_z = [0, 0, 0, 0, 0]
+    a90 = np.pi / 2
+    a60 = np.pi / 3
+    a45 = a90 / 2
+    a30 = a90 / 3
+    a15 = a90 / 6
+    a10 = a90 / 9
+
+    angles = [a45, a15, 0, -a15, -a45]
+    offsets_x = [0, 1, 1, 1, 1]
+    offsets_z = [0, -1, -1, 1, 1]
     col = Column(angles, offsets_x, offsets_z)
 
     print()
