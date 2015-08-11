@@ -8,7 +8,7 @@ import numpy as np
 
 
 def pos_to_openscad(pos):
-    assert len(pos) == 3, 'Incorrect pos.'
+    assert len(pos) == 2, 'Incorrect pos.'
     openscad_repr = ', '.join(str(coord) for coord in pos)
     openscad_repr = '[{}]'.format(openscad_repr)
     return openscad_repr
@@ -22,24 +22,29 @@ class KeyUnit(object):
 
     KEYCAP_TO_PLATE_OFFSET = 6.7
 
-    def __init__(self, angle, pos, close_height):
+    def __init__(self, angle, pos, prev_key_or_height):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
 
-        assert(close_height > 0);
-        # TODO:
+        try:
+            close_height = float(prev_key_or_height)
+        except TypeError:
+            prev_key = prev_key_or_height
+            close_height = prev_key.far_height
+
+        assert close_height > 0, 'Invalid key height.'
         self.close_height = close_height
-        self.far_height = self.close_height - self.SINGLE * np.tan(self.angle)
+        self.far_height = self.close_height - self.KEY_WIDTH * np.sin(self.angle)
 
         self.pos = np.asarray(pos)
-        assert self.pos.shape == (3,), 'Incorrect coordinate format.'
+        assert self.pos.shape == (2,), 'Incorrect coordinate format.'
 
         self.width = self.SINGLE
-        self.depth = self.KEY_WIDTH * np.cos(abs(self.angle)) + self.KEYCAP_TO_PLATE_OFFSET * np.sin(abs(self.angle))
+        self.depth = self.KEY_WIDTH * np.cos(self.angle)
 
     @property
-    def far_keycap_height(self):
-        return self.far_height + self.KEYCAP_TO_PLATE_OFFSET / np.cos(self.angle)
+    def keycap_offset(self):
+        return self.KEYCAP_TO_PLATE_OFFSET / np.cos(self.angle)
 
     @property
     def max_height(self):
@@ -65,11 +70,13 @@ class KeyUnit(object):
     def ymax(self):
         return self.pos[1] + self.width
 
-    def to_openscad(self):
-        openscad_repr = "key_unit({pos}, {angle}, {height});".format(
+    def to_openscad(self, what):
+        assert what in {'key', 'support', 'hole'}, 'What?'
+        openscad_repr = "ku_{what}({pos}, {angle}, {height});".format(
+            what=what,
             pos=pos_to_openscad(self.pos),
             angle=self.angle / np.pi * 180,
-            height=self.max_height
+            height=self.close_height
         )
         return openscad_repr
 
@@ -85,16 +92,31 @@ class Column(object):
 
         self.keys = []
         xmax = 0
-        current_height = 40
+        prev_key = 40
         for a, ox, oz in itertools.izip(self.angles, self.offsets_x, self.offsets_z):
-            print(current_height)
-            new_key = KeyUnit(a, [xmax, 0, 0], current_height)
+            new_key = KeyUnit(a, [xmax, 0], prev_key)
             self.keys.append(new_key)
             xmax = new_key.xmax
-            current_height = new_key.far_keycap_height - 6.7
+            prev_key = new_key
 
     def to_openscad(self):
-        openscad_repr = '\n'.join(k.to_openscad() for k in self.keys)
+        openscad_repr = '''
+difference() {{
+    union() {{
+        {supports}
+    }}
+    union() {{
+        {holes}
+    }}
+}}
+union() {{
+    {keys}
+}}
+        '''.format(
+            supports='\n'.join(k.to_openscad('support') for k in self.keys),
+            keys='\n'.join(k.to_openscad('key') for k in self.keys),
+            holes='\n'.join(k.to_openscad('hole') for k in self.keys),
+        )
         return openscad_repr
 
 
