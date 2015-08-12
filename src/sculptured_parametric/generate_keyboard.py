@@ -22,11 +22,11 @@ class KeyUnit(object):
 
     KEYCAP_TO_PLATE_OFFSET = 6.7
 
-    def __init__(self, angle, pos, prev_key_or_height):
+    def __init__(self, angle, pos, close_height):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
 
-        close_height = float(prev_key_or_height)
+        close_height = float(close_height)
         assert close_height > 0, 'Invalid key height.'
         self.close_height = close_height
         self.far_height = self.close_height - self.KEY_WIDTH * np.sin(self.angle)
@@ -195,12 +195,12 @@ def main():
         [False, True, True, True, True],
     ]
     angles = [
-        [a45, a15, 0, -a30, -a60],
-        [a45, a15, 0, -a30, -a60],
-        [a45, a15, 0, -a15, -a45],
-        [a45, a15, 0, -a15, -a45],
-        [a45, a15, 0, -a15, -a45],
-        [a45, a15, 0, -a15, -a45],
+        [a30, a10, 0, -a25, -a60],
+        [a30, a10, 0, -a25, -a60],
+        [a30, a10, 0, -a10, -a45],
+        [a30, a10, 0, -a10, -a45],
+        [a30, a10, 0, -a10, -a45],
+        [a30, a10, 0, -a10, -a45],
     ]
     offsets_x = [
         [0, 1, 1, 1, 1],
