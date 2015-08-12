@@ -2,7 +2,7 @@
 include <../common.scad>;
 
 
-module ku_key(pos, angle, height, simplified=false) {
+module ku_key(pos, angle, height, only_trace=false) {
     //
     // Create a key unit with its close edge on <height>.
     //
@@ -10,7 +10,7 @@ module ku_key(pos, angle, height, simplified=false) {
         // Tilt the keycap forward or back.
         rotate(angle, [0, 1, 0]) {
             // Create a single keycap in [0, 0, 0].
-            color("FireBrick") if (simplified) {
+            color("FireBrick") if (only_trace) {
                 cube([KEY_WIDTH, KEY_WIDTH, 0.01]);
             }
             else {
@@ -48,12 +48,16 @@ module ku_support(pos, angle, height) {
     //
     difference() {
         // This vertical well forms the support.
-        linear_extrude(height + SINGLE) projection() ku_key(pos, angle, height, true);
+        linear_extrude(height + SINGLE) projection() {
+            ku_key(pos, angle, height, only_trace=true);
+        }
         // The plane that limits the key support from its top.
         translate([pos[0] - 1, pos[1] - 1, height - KEYCAP_TO_PLATE_OFFSET]) {
             // Tilt the key support forward or back.
             rotate(angle, [0, 1, 0]) {
-                color("blue") translate([0, 0, 50]) cube([100, 100, 100], center=true);
+                color("blue") translate([0, 0, 50]) {
+                    cube([100, 100, 100], center=true);
+                }
             }
         }
     }
