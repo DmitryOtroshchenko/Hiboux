@@ -46,7 +46,6 @@ module ku_support(pos, angle, height) {
     // The support covers only the zone directly under the keycap.
     // Signature is identical to key_unit_keycap.
     //
-    
     difference() {
         // This vertical well forms the support.
         linear_extrude(height + SINGLE) projection() ku_key(pos, angle, height, true);
@@ -57,22 +56,5 @@ module ku_support(pos, angle, height) {
                 color("blue") translate([0, 0, 50]) cube([100, 100, 100], center=true);
             }
         }
-    }
-}
-
-module ku(pos, angle, height, with_keycap=true) {
-    if (with_keycap) {
-        ku_key(pos, angle, height);
-    }
-
-    difference() {
-        ku_support(pos, angle, height);
-        ku_hole(pos, angle, height);
-    }
-}
-
-module support(pos, depth, height) {
-    translate([pos[0], pos[1]]) {
-        color("brown") cube([depth, SINGLE, height]);
     }
 }
