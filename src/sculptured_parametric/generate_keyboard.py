@@ -185,6 +185,7 @@ def main():
     a30 = a90 / 3
     a15 = a90 / 6
     a10 = a90 / 9
+    a20 = a10 * 2
 
     masks = [
         [True, True, True, True, True],
@@ -195,8 +196,8 @@ def main():
         [False, True, True, True, True],
     ]
     angles = [
-        [a30, a10, 0, -a30, -a60],
-        [a30, a10, 0, -a30, -a60],
+        [a30, a10, 0, -a20, -a60],
+        [a30, a10, 0, -a20, -a60],
         [a30, a10, 0, -a10, -a45],
         [a30, a10, 0, -a10, -a45],
         [a30, a10, 0, -a10, -a45],
@@ -218,9 +219,9 @@ def main():
         [0, -1, -1, 1, 1],
         [0, -1, -1, 1, 1],
     ]
-    col_offsets_x = [0, 0, 0, 0, 0, 0]
+    col_offsets_x = [-10, -10, 0, 5, 0, 0]
     col_offsets_y = [0, 0, 0, 0, 0, 0]
-    col_offsets_z = [4.5, 4.5, 1, 0, 2, 2]
+    col_offsets_z = [0, 0, 0, 0, 0, 0]
     col_widths = [
         KeyUnit.SINGLE_AND_HALF, KeyUnit.SINGLE, KeyUnit.SINGLE,
         KeyUnit.SINGLE, KeyUnit.SINGLE, KeyUnit.SINGLE
