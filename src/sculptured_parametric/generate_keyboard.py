@@ -20,9 +20,13 @@ class KeyUnit(object):
 
     SINGLE = 19.0
 
+    SINGLE_AND_HALF = SINGLE * 1.5
+
+    DOUBLE = SINGLE * 2
+
     KEYCAP_TO_PLATE_OFFSET = 6.7
 
-    def __init__(self, angle, pos, close_height):
+    def __init__(self, angle, pos, close_height, width):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
 
@@ -34,7 +38,7 @@ class KeyUnit(object):
         self.pos = np.asarray(pos)
         assert self.pos.shape == (3,), 'Incorrect coordinate format.'
 
-        self.width = self.SINGLE
+        self.width = width
         self.depth = self.KEY_WIDTH * np.cos(self.angle)
 
     @property
@@ -63,18 +67,19 @@ class KeyUnit(object):
 
     def to_openscad(self, what):
         assert what in {'key', 'support', 'hole'}, 'What?'
-        openscad_repr = "ku_{what}({pos}, {angle}, {height});".format(
+        openscad_repr = "ku_{what}({pos}, {angle}, {height}, {width});".format(
             what=what,
             pos=pos_to_openscad(self.pos),
             angle=self.angle / np.pi * 180,
-            height=self.close_height
+            height=self.close_height,
+            width=self.width / self.SINGLE
         )
         return openscad_repr
 
 
 class Column(object):
 
-    def __init__(self, y, height, mask, angles, offsets_x, offsets_z):
+    def __init__(self, y, height, width, mask, angles, offsets_x, offsets_z):
         assert len(mask) == len(angles) == len(offsets_x) == len(offsets_z) == 5, \
             'Incorrect column parameters.'
         self.mask = mask
@@ -83,12 +88,13 @@ class Column(object):
         self.offsets_z = offsets_z
 
         assert height >= 0, 'Incorrect column initial height.'
+        assert width >= 0, 'Incorrect column width.'
 
         self.keys = []
         xmax = 0
         prev_key_height = height
         for is_present, a, ox, oz in itertools.izip(self.mask, self.angles, self.offsets_x, self.offsets_z):
-            new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz)
+            new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz, width)
             # TODO: not the most straightforward solution.
             if is_present:
                 self.keys.append(new_key)
@@ -121,7 +127,7 @@ class Keyboard(object):
 
     def __init__(self, height,
             masks, angles, offsets_x, offsets_z,
-            col_offsets_x, col_offsets_y, col_offsets_z):
+            col_offsets_x, col_offsets_y, col_offsets_z, col_widths):
 
         self.masks = np.asarray(masks)
         self.angles = np.asarray(angles)
@@ -134,7 +140,8 @@ class Keyboard(object):
         self.col_offsets_x = np.asarray(col_offsets_x)
         self.col_offsets_y = np.asarray(col_offsets_y)
         self.col_offsets_z = np.asarray(col_offsets_z)
-        assert len(self.col_offsets_x) == len(self.col_offsets_y) == len(self.col_offsets_z) == len(self.angles), \
+        self.col_widths = np.asarray(col_widths)
+        assert len(self.col_offsets_x) == len(self.col_offsets_y) == len(self.col_offsets_z) == len(self.angles) == len(self.col_widths), \
             'Incorrect column offsets.'
 
         # TODO: refactor?
@@ -148,13 +155,14 @@ class Keyboard(object):
             new_col = Column(
                 ymax,
                 height,
+                self.col_widths[col_ix],
                 self.masks[col_ix],
                 self.angles[col_ix],
                 self.offsets_x[col_ix],
                 self.offsets_z[col_ix],
             )
             self.columns.append(new_col)
-            ymax += KeyUnit.SINGLE
+            ymax += self.col_widths[col_ix]
 
     def to_openscad(self):
         header = '''
@@ -213,10 +221,14 @@ def main():
     col_offsets_x = [0, 0, 0, 0, 0, 0]
     col_offsets_y = [0, 0, 0, 0, 0, 0]
     col_offsets_z = [4.5, 4.5, 1, 0, 2, 2]
+    col_widths = [
+        KeyUnit.SINGLE_AND_HALF, KeyUnit.SINGLE, KeyUnit.SINGLE,
+        KeyUnit.SINGLE, KeyUnit.SINGLE, KeyUnit.SINGLE
+    ]
     kbd = Keyboard(
         30,
         masks, angles, offsets_x, offsets_z,
-        col_offsets_x, col_offsets_y, col_offsets_z
+        col_offsets_x, col_offsets_y, col_offsets_z, col_widths
     )
     print(kbd.to_openscad())
 
