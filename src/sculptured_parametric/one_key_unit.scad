@@ -1,8 +1,5 @@
 
 include <../common.scad>;
-include <../keycaps/dsa.scad>;
-
-USE_SIMPLIFIED_KEYS = false;
 
 
 module ku_key(pos, angle, height, simplified=false) {
@@ -17,7 +14,10 @@ module ku_key(pos, angle, height, simplified=false) {
                 cube([KEY_WIDTH, KEY_WIDTH, 0.01]);
             }
             else {
-                key(0, 0, SINGLE);
+                KEYCAP_OFFSET = -1;
+                translate([KEY_WIDTH / 2, KEY_WIDTH / 2, KEYCAP_OFFSET]) {
+                    import("../keycaps/mx_dsa.stl");
+                }
             }
         }
     }
