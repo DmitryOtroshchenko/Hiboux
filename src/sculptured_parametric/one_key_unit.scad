@@ -2,7 +2,7 @@
 include <../common.scad>;
 
 
-module ku_key(pos, angle, height, width_multiplier, only_trace=false) {
+module ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=false) {
     //
     // Create a key unit with its close edge on <height>.
     //
@@ -23,7 +23,7 @@ module ku_key(pos, angle, height, width_multiplier, only_trace=false) {
     }
 }
 
-module ku_hole(pos, angle, height, width_multiplier) {
+module ku_hole(pos, angle, height, width_multiplier, offset_x) {
     //
     // Create a hole for a single key unit.
     // Signature is identical to key_unit_keycap.
@@ -40,7 +40,7 @@ module ku_hole(pos, angle, height, width_multiplier) {
     }
 }
 
-module ku_support(pos, angle, height, width_multiplier) {
+module ku_support(pos, angle, height, width_multiplier, offset_x) {
     //
     // Create a support for a single key unit.
     // The support covers only the zone directly under the keycap.
@@ -48,8 +48,10 @@ module ku_support(pos, angle, height, width_multiplier) {
     //
     difference() {
         // This vertical well forms the support.
-        linear_extrude(height + SINGLE) projection() {
-            ku_key(pos, angle, height, width_multiplier, only_trace=true);
+        linear_extrude(height + SINGLE) {
+            offset(delta=offset_x + 0.01) projection() {
+                ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=true);
+            }
         }
         // The plane that limits the key support from its top.
         translate([pos[0] - 1, pos[1] - 1, height - KEYCAP_TO_PLATE_OFFSET]) {

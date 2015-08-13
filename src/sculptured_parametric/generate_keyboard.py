@@ -42,6 +42,7 @@ class KeyUnit(object):
         self.angle = angle
 
         assert x_offset >= 0, 'Incorrect x offset.'
+        self.x_offset = x_offset
         self.total_depth = (self.KEY_WIDTH + x_offset)
 
         close_height = float(close_height)
@@ -81,12 +82,13 @@ class KeyUnit(object):
 
     def to_openscad(self, what):
         assert what in {'key', 'support', 'hole'}, 'What?'
-        openscad_repr = "ku_{what}({pos}, {angle}, {height}, {width});".format(
+        openscad_repr = "ku_{what}({pos}, {angle}, {height}, {width}, {x_offset});".format(
             what=what,
             pos=pos_to_openscad(self.pos),
             angle=self.angle / np.pi * 180,
             height=self.close_height,
-            width=self.width / self.SINGLE
+            width=self.width / self.SINGLE,
+            x_offset=self.x_offset
         )
         return openscad_repr
 
