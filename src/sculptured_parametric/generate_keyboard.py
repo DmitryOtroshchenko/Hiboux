@@ -37,20 +37,23 @@ class KeyUnit(object):
 
     KEYCAP_TO_PLATE_OFFSET = 6.7
 
-    def __init__(self, angle, pos, close_height, width):
+    def __init__(self, angle, pos, close_height, width, x_offset=0):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
+
+        assert x_offset >= 0, 'Incorrect x offset.'
+        self.total_depth = (self.KEY_WIDTH + x_offset)
 
         close_height = float(close_height)
         assert close_height > 0, 'Invalid key height.'
         self.close_height = close_height
-        self.far_height = self.close_height - self.KEY_WIDTH * np.sin(self.angle)
+        self.far_height = self.close_height - self.total_depth * np.sin(self.angle)
 
         self.pos = np.asarray(pos)
         assert self.pos.shape == (3,), 'Incorrect coordinate format.'
 
         self.width = width
-        self.depth = self.KEY_WIDTH * np.cos(self.angle)
+        self.depth = self.total_depth * np.cos(self.angle)
 
     @property
     def max_height(self):
@@ -90,10 +93,12 @@ class KeyUnit(object):
 
 class Column(object):
 
-    def __init__(self, y, height, width, mask, angles, offsets_x, offsets_z):
+    def __init__(self, pos, height, width, mask, angles, offsets_x, offsets_z):
         key_params_lengths_equal = allequal(
             5, len(mask), len(angles), len(offsets_x), len(offsets_z))
         assert key_params_lengths_equal, 'Incorrect column parameters.'
+
+        assert len(pos) == 2, 'Incorrect column position.'
 
         self.mask = mask
         self.angles = angles
@@ -104,7 +109,7 @@ class Column(object):
         assert width >= 0, 'Incorrect column width.'
 
         self.keys = []
-        xmax = 0
+        xmax = pos[0]
         prev_key_height = height
 
         key_params = itertools.izip(
@@ -116,9 +121,10 @@ class Column(object):
         for is_present, a, ox, oz in key_params:
             new_key = KeyUnit(
                 a,
-                [xmax + ox, y, oz],
+                [xmax, pos[1], oz],
                 prev_key_height + oz,
-                width
+                width,
+                ox
             )
             # TODO: not the most straightforward solution.
             if is_present:
@@ -177,7 +183,6 @@ class Keyboard(object):
         assert col_params_lengths_equal, 'Incorrect column offsets.'
 
         # TODO: refactor?
-        self.offsets_x[:, 0] += self.col_offsets_x
         self.offsets_z[:, 0] += self.col_offsets_z
 
         self.columns = []
@@ -185,7 +190,7 @@ class Keyboard(object):
         for col_ix in xrange(len(self.angles)):
             ymax += col_offsets_y[col_ix]
             new_col = Column(
-                ymax,
+                [self.col_offsets_x[col_ix], ymax],
                 height,
                 self.col_widths[col_ix],
                 self.masks[col_ix],
@@ -236,12 +241,12 @@ def main():
         [a30, a10, 0, -a10, -a45],
     ]
     offsets_x = [
-        [0, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1],
-        [0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1],
     ]
     offsets_z = [
         [0, -1, -1, 1, 1],
