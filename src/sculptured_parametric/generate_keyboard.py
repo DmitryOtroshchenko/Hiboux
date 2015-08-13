@@ -7,6 +7,17 @@ import itertools
 import numpy as np
 
 
+def allequal(*args):
+    if not args:
+        return True
+
+    etalon = args[0]
+    for a in args:
+        if a != etalon:
+            return False
+    return True
+
+
 def pos_to_openscad(pos):
     assert len(pos) == 3, 'Incorrect pos.'
     openscad_repr = ', '.join(str(coord) for coord in pos)
@@ -80,8 +91,10 @@ class KeyUnit(object):
 class Column(object):
 
     def __init__(self, y, height, width, mask, angles, offsets_x, offsets_z):
-        assert len(mask) == len(angles) == len(offsets_x) == len(offsets_z) == 5, \
-            'Incorrect column parameters.'
+        key_params_lengths_equal = allequal(
+            5, len(mask), len(angles), len(offsets_x), len(offsets_z))
+        assert key_params_lengths_equal, 'Incorrect column parameters.'
+
         self.mask = mask
         self.angles = angles
         self.offsets_x = offsets_x
@@ -93,8 +106,20 @@ class Column(object):
         self.keys = []
         xmax = 0
         prev_key_height = height
-        for is_present, a, ox, oz in itertools.izip(self.mask, self.angles, self.offsets_x, self.offsets_z):
-            new_key = KeyUnit(a, [xmax + ox, y, oz], prev_key_height + oz, width)
+
+        key_params = itertools.izip(
+            self.mask,
+            self.angles,
+            self.offsets_x,
+            self.offsets_z
+        )
+        for is_present, a, ox, oz in key_params:
+            new_key = KeyUnit(
+                a,
+                [xmax + ox, y, oz],
+                prev_key_height + oz,
+                width
+            )
             # TODO: not the most straightforward solution.
             if is_present:
                 self.keys.append(new_key)
@@ -134,15 +159,22 @@ class Keyboard(object):
         self.offsets_x = np.asarray(offsets_x)
         self.offsets_z = np.asarray(offsets_z)
 
-        assert self.masks.shape == self.angles.shape == self.offsets_x.shape == self.offsets_z.shape, \
-            'Incorrect keyboard parameters.'
+        key_params_sahapes_equal = allequal(
+            self.masks.shape, self.angles.shape,
+            self.offsets_x.shape, self.offsets_z.shape
+        )
+        assert key_params_sahapes_equal, 'Incorrect keyboard parameters.'
 
         self.col_offsets_x = np.asarray(col_offsets_x)
         self.col_offsets_y = np.asarray(col_offsets_y)
         self.col_offsets_z = np.asarray(col_offsets_z)
         self.col_widths = np.asarray(col_widths)
-        assert len(self.col_offsets_x) == len(self.col_offsets_y) == len(self.col_offsets_z) == len(self.angles) == len(self.col_widths), \
-            'Incorrect column offsets.'
+
+        col_params_lengths_equal = allequal(
+            len(self.col_offsets_x), len(self.col_offsets_y),
+            len(self.col_offsets_z), len(self.angles), len(self.col_widths)
+        )
+        assert col_params_lengths_equal, 'Incorrect column offsets.'
 
         # TODO: refactor?
         self.offsets_x[:, 0] += self.col_offsets_x
