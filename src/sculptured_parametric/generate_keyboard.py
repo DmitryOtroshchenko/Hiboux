@@ -100,16 +100,20 @@ class KeyUnit(object):
 
 class Column(object):
 
-    def __init__(self, pos, height, width, mask, angles, offsets_x, offsets_z):
+    def __init__(self, pos, height, width, mask, angles, offsets_x_before, offsets_x_after, offsets_z):
         key_params_lengths_equal = allequal(
-            5, len(mask), len(angles), len(offsets_x), len(offsets_z))
+            5, len(mask), len(angles),
+            len(offsets_x_before), len(offsets_x_after),
+            len(offsets_z)
+        )
         assert key_params_lengths_equal, 'Incorrect column parameters.'
 
         assert len(pos) == 2, 'Incorrect column position.'
 
         self.mask = mask
         self.angles = angles
-        self.offsets_x = offsets_x
+        self.offsets_x_before = offsets_x_before
+        self.offsets_x_after = offsets_x_after
         self.offsets_z = offsets_z
 
         assert height >= 0, 'Incorrect column initial height.'
@@ -122,17 +126,18 @@ class Column(object):
         key_params = itertools.izip(
             self.mask,
             self.angles,
-            self.offsets_x,
+            self.offsets_x_before,
+            self.offsets_x_after,
             self.offsets_z
         )
-        for is_present, a, ox, oz in key_params:
+        for is_present, a, oxb, oxa, oz in key_params:
             new_key = KeyUnit(
                 a,
                 [xmax, pos[1], oz],
                 prev_key_height + oz,
                 width,
-                0,
-                ox
+                oxb,
+                oxa
             )
             # TODO: not the most straightforward solution.
             if is_present:
@@ -165,17 +170,19 @@ union() {{
 class Keyboard(object):
 
     def __init__(self, height,
-            masks, angles, offsets_x, offsets_z,
+            masks, angles, offsets_x_before, offsets_x_after, offsets_z,
             col_offsets_x, col_offsets_y, col_offsets_z, col_widths):
 
         self.masks = np.asarray(masks)
         self.angles = np.asarray(angles)
-        self.offsets_x = np.asarray(offsets_x)
+        self.offsets_x_before = np.asarray(offsets_x_before)
+        self.offsets_x_after = np.asarray(offsets_x_after)
         self.offsets_z = np.asarray(offsets_z)
 
         key_params_sahapes_equal = allequal(
             self.masks.shape, self.angles.shape,
-            self.offsets_x.shape, self.offsets_z.shape
+            self.offsets_x_before.shape, self.offsets_x_after.shape,
+            self.offsets_z.shape
         )
         assert key_params_sahapes_equal, 'Incorrect keyboard parameters.'
 
@@ -203,7 +210,8 @@ class Keyboard(object):
                 self.col_widths[col_ix],
                 self.masks[col_ix],
                 self.angles[col_ix],
-                self.offsets_x[col_ix],
+                self.offsets_x_before[col_ix],
+                self.offsets_x_after[col_ix],
                 self.offsets_z[col_ix],
             )
             self.columns.append(new_col)
@@ -238,13 +246,21 @@ def main():
         [30, 10, 0, -10, -45],
     ])
     angles = angles / 180 * np.pi
-    offsets_x = [
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1],
+    offsets_x_before = [
+        [4, 0, 0, 0, 0],
+        [4, 0, 0, 0, 0],
+        [4, 0, 0, 0, 0],
+        [0, 7, 0, 0, 0],
+        [0, 2, 0, 0, 0],
+        [0, 2, 0, 0, 0],
+    ]
+    offsets_x_after = [
+        [1, 1, 1, 1, 7],
+        [1, 1, 1, 1, 7],
+        [1, 1, 1, 1, 7],
+        [1, 1, 1, 1, 7],
+        [1, 1, 1, 1, 7],
+        [1, 1, 1, 1, 7],
     ]
     offsets_z = [
         [0, -1, -1, 1, 1],
@@ -263,7 +279,7 @@ def main():
     ]
     kbd = Keyboard(
         30,
-        masks, angles, offsets_x, offsets_z,
+        masks, angles, offsets_x_before, offsets_x_after, offsets_z,
         col_offsets_x, col_offsets_y, col_offsets_z, col_widths
     )
     print(kbd.to_openscad())
