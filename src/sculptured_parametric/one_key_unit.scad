@@ -49,7 +49,8 @@ module ku_support(pos, angle, height, width_multiplier, offset_x) {
     difference() {
         // This vertical well forms the support.
         linear_extrude(height + SINGLE) {
-            offset(delta=offset_x + 0.01) projection() {
+            offset(delta=offset_x + 0.01)
+            projection() {
                 ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=true);
             }
         }
@@ -61,6 +62,11 @@ module ku_support(pos, angle, height, width_multiplier, offset_x) {
                     cube([100, 100, 100], center=true);
                 }
             }
+        }
+        // The planes that limit the key support from its left and right.
+        translate([pos[0] - 50, pos[1], -50]) {
+            translate([0, -100, 0]) cube([100, 100, 100]);
+            translate([0, width_multiplier * SINGLE, 0]) cube([100, 100, 100]);
         }
     }
 }
