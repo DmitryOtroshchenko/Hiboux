@@ -37,13 +37,17 @@ class KeyUnit(object):
 
     KEYCAP_TO_PLATE_OFFSET = 6.7
 
-    def __init__(self, angle, pos, close_height, width, x_offset=0):
+    def __init__(self, angle, pos, close_height, width, offset_before, offset_after):
         assert -np.pi / 2 <= angle <= np.pi / 2, 'Incorrect angle.'
         self.angle = angle
 
-        assert x_offset >= 0, 'Incorrect x offset.'
-        self.x_offset = x_offset
-        self.total_depth = (self.KEY_WIDTH + x_offset)
+        assert offset_before >= 0, 'Incorrect offset_before.'
+        self.offset_before = offset_before
+
+        assert offset_after >= 0, 'Incorrect offset_after.'
+        self.offset_after = offset_after
+
+        self.total_depth = (self.KEY_WIDTH + offset_before + offset_after)
 
         close_height = float(close_height)
         assert close_height > 0, 'Invalid key height.'
@@ -82,13 +86,14 @@ class KeyUnit(object):
 
     def to_openscad(self, what):
         assert what in {'key', 'support', 'hole'}, 'What?'
-        openscad_repr = "ku_{what}({pos}, {angle}, {height}, {width}, {x_offset});".format(
+        openscad_repr = "ku_{what}({pos}, {angle}, {height}, {width}, {offset_before}, {offset_after});".format(
             what=what,
             pos=pos_to_openscad(self.pos),
             angle=self.angle / np.pi * 180,
             height=self.close_height,
             width=self.width / self.SINGLE,
-            x_offset=self.x_offset
+            offset_before=self.offset_before,
+            offset_after=self.offset_after
         )
         return openscad_repr
 
@@ -126,6 +131,7 @@ class Column(object):
                 [xmax, pos[1], oz],
                 prev_key_height + oz,
                 width,
+                0,
                 ox
             )
             # TODO: not the most straightforward solution.

@@ -18,8 +18,14 @@
 
 include <../common.scad>;
 
+// Practically small unit of size used to insure good nodded intersections
+// between surfaces and geometries (sometimes geoms that are close to
+// each other with 0.0 gap do not join properly so we need to grow them
+// a little bit to create some intersection between them).
+MARGIN = 0.01;
 
-module ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=false) {
+
+module ku_key(pos, angle, height, width_multiplier, offset_before, offset_after, only_trace=false) {
     //
     // Create a key unit with.
     //
@@ -27,14 +33,17 @@ module ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=false) 
     // angle - tilt angle of the keycap.
     // height - height of the keycap's close-bottom edge over X0Y.
     // width_multiplier - how wide is the keycap relative to SINGLE?
-    // offset_x - an offset along the X axis after the keycap.
+    // offset_before - an offset along the X axis before the keycap.
+    //      the offset IS filled with plastic.
+    // offset_after - an offset along the X axis after the keycap.
+    //      the offset IS filled with plastic.
     //
     // only_trace - this parameter is unique for ku_key(). It creates
     //      an infinitely thin cube that repeats the contour of the bottom
     //      face of the keycap. This parameter is used to create an
     //      idealized keycap's projections on X0Y.
     //
-    translate([pos[0], pos[1], height]) {
+    translate([pos[0] + offset_before, pos[1], height]) {
         // Tilt the keycap.
         scale([1, width_multiplier, 1]) rotate(angle, [0, 1, 0]) {
             // Create a single keycap in [0, 0, 0].
@@ -42,7 +51,7 @@ module ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=false) 
                 // only_trace creates and infinitely thin cube that permits
                 // to create an idealized projection of the keycap's bottom
                 // on the underlying plane.
-                cube([KEY_WIDTH, KEY_WIDTH, 0.01]);
+                cube([KEY_WIDTH, KEY_WIDTH, MARGIN]);
             }
             else {
                 // The used keycap model is lifted over XOY by 1mm
@@ -57,12 +66,12 @@ module ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=false) 
     }
 }
 
-module ku_hole(pos, angle, height, width_multiplier, offset_x) {
+module ku_hole(pos, angle, height, width_multiplier, offset_before, offset_after) {
     //
     // Create a hole for a single key unit.
     // Signature is identical to ku_key.
     //
-    translate([pos[0], pos[1], height]) {
+    translate([pos[0] + offset_before, pos[1], height]) {
         // Tilt the key hole.
         rotate(angle, [0, 1, 0]) {
             // Create a key hole starting right under the keycap.
@@ -74,7 +83,7 @@ module ku_hole(pos, angle, height, width_multiplier, offset_x) {
     }
 }
 
-module ku_support(pos, angle, height, width_multiplier, offset_x) {
+module ku_support(pos, angle, height, width_multiplier, offset_before, offset_after) {
     //
     // Create a support for a single key unit.
     // The support covers only the zone directly under the keycap.
@@ -83,9 +92,12 @@ module ku_support(pos, angle, height, width_multiplier, offset_x) {
     difference() {
         // This vertical well forms the support.
         linear_extrude(height + SINGLE) {
-            offset(delta=offset_x + 0.01)
-            projection() {
-                ku_key(pos, angle, height, width_multiplier, offset_x, only_trace=true);
+            offset(delta=max(offset_before, offset_after) + MARGIN)
+            translate([offset_after - offset_before, 0, 0]) projection() {
+                ku_key(
+                    pos, angle, height, width_multiplier,
+                    offset_before, offset_after, only_trace=true
+                );
             }
         }
         // The plane that limits the key support from its top.
