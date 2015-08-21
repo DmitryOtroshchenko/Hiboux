@@ -1,4 +1,6 @@
 
+- Pinky cannot move back that easily. Thus staggering columns aggressively is questionable.
+
 - Another thought about acrylic mount plates. It may be possible to use a 1.5mm switch mount plate and glue it to a 6mm (or any thickness you want) plate that has oversize switch holes (say 1-1.5mm all around). So the switches mount correctly to the 1.5mm sheet and are held firmly by the supporting thicker plate. You can probably even have cutouts in the 1.5mm plate to allow for opening the switches when mounted, due to the support being really close.
 
 - Make teensy visible under the acrylic: under the palm or on top of the KB
