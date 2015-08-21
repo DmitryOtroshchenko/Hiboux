@@ -206,10 +206,7 @@ class Keyboard(object):
     def to_openscad(self):
         header = '''
 include <../common.scad>;
-include <../keycaps/dsa.scad>;
-include <one_key_unit.scad>;
-
-USE_SIMPLIFIED_KEYS = false;
+include <key_unit.scad>;
 
 '''
         columns_repr = '\n'.join(col.to_openscad() for col in self.columns)
