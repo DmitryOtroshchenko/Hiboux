@@ -47,18 +47,18 @@ class KeyUnit(object):
         assert offset_after >= 0, 'Incorrect offset_after.'
         self.offset_after = offset_after
 
-        self.total_depth = (self.KEY_WIDTH + offset_before + offset_after)
-
-        close_height = float(close_height)
-        assert close_height > 0, 'Invalid key height.'
-        self.close_height = close_height
-        self.far_height = self.close_height - self.total_depth * np.sin(self.angle)
 
         self.pos = np.asarray(pos)
         assert self.pos.shape == (3,), 'Incorrect coordinate format.'
 
         self.width = width
-        self.depth = self.total_depth * np.cos(self.angle)
+        self.depth_to_forward_key_edge = self.offset_before + self.KEY_WIDTH * np.cos(self.angle)
+        self.total_depth = self.depth_to_forward_key_edge + self.offset_after
+
+        close_height = float(close_height)
+        assert close_height > 0, 'Invalid key height.'
+        self.close_height = close_height
+        self.far_height = self.close_height - self.KEY_WIDTH * np.sin(self.angle)
 
     @property
     def max_height(self):
@@ -74,7 +74,7 @@ class KeyUnit(object):
 
     @property
     def xmax(self):
-        return self.xmin + self.depth
+        return self.xmin + self.total_depth
 
     @property
     def ymin(self):
