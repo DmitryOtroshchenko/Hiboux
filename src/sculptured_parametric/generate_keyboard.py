@@ -218,14 +218,6 @@ USE_SIMPLIFIED_KEYS = false;
 
 
 def main():
-    a90 = np.pi / 2
-    a60 = np.pi / 3
-    a45 = a90 / 2
-    a30 = a90 / 3
-    a15 = a90 / 6
-    a10 = a90 / 9
-    a20 = a10 * 2
-
     masks = [
         [True, True, True, True, True],
         [True, True, True, True, True],
@@ -234,14 +226,15 @@ def main():
         [False, True, True, True, True],
         [False, True, True, True, True],
     ]
-    angles = [
-        [a30, a10, 0, -a20, -a60],
-        [a30, a10, 0, -a20, -a60],
-        [a30, a10, 0, -a10, -a45],
-        [a30, a10, 0, -a10, -a45],
-        [a30, a10, 0, -a10, -a45],
-        [a30, a10, 0, -a10, -a45],
-    ]
+    angles = np.array([
+        [30, 10, 0, -20, -60],
+        [30, 10, 0, -20, -60],
+        [30, 10, 0, -10, -45],
+        [30, 10, 0, -10, -45],
+        [30, 10, 0, -10, -45],
+        [30, 10, 0, -10, -45],
+    ])
+    angles = angles / 180 * np.pi
     offsets_x = [
         [1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1],
